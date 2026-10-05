@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star OS · 您的系统优化首选</title>
+<meta name="description" content="Star OS —— 小天才手表的深度定制系统模块。六大核心优化，让您的设备焕然一新。">
+<style>
+:root{
+  --bg:#070b14; --bg2:#0b1120; --panel:#101827cc; --line:#1e2a44;
+  --txt:#e6edf7; --dim:#8b98b0; --acc:#5aa9ff; --acc2:#8b7bff;
+  --ok:#59d99a; --warn:#e8b34a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--txt);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  line-height:1.7; overflow-x:hidden;
+}
+a{color:var(--acc); text-decoration:none}
+a:hover{color:#8cc6ff}
+.wrap{max-width:1080px; margin:0 auto; padding:0 22px}
+
+/* ---------- 导航 ---------- */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:99;
+  background:#070b14d9; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+nav .wrap{display:flex; align-items:center; gap:8px; height:60px}
+.logo{font-weight:800; font-size:19px; letter-spacing:.5px; margin-right:auto; display:flex; align-items:center; gap:9px}
+.logo .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2)); box-shadow:0 0 12px #5aa9ff88}
+nav a.nl{color:var(--dim); font-size:14px; padding:7px 11px; border-radius:8px}
+nav a.nl:hover{color:#fff; background:#141d33}
+nav a.cta{background:linear-gradient(135deg,var(--acc),#4a90ee); color:#04101f; font-weight:700; padding:8px 16px; border-radius:9px}
+nav a.cta:hover{filter:brightness(1.12); color:#04101f}
+@media(max-width:760px){ nav a.nl{display:none} }
+
+/* ---------- Hero ---------- */
+header{
+  position:relative; padding:150px 0 90px; text-align:center; overflow:hidden;
+}
+header::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:
+    radial-gradient(600px 320px at 22% 8%, #1b3a6855, transparent 70%),
+    radial-gradient(520px 300px at 80% 22%, #3b2f7a55, transparent 70%),
+    radial-gradient(700px 420px at 50% 100%, #0e2542aa, transparent 75%);
+}
+.badge{
+  display:inline-block; font-size:12.5px; letter-spacing:2.5px; color:var(--dim);
+  border:1px solid var(--line); border-radius:99px; padding:6px 18px; margin-bottom:26px;
+  background:#0d1526a0;
+}
+h1.title{
+  font-size:clamp(46px,9vw,86px); font-weight:900; letter-spacing:1px;
+  background:linear-gradient(180deg,#ffffff 30%,#9cc4ff);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  line-height:1.15;
+}
+.slogan{font-size:clamp(18px,3.4vw,25px); color:#c7d5ea; margin:16px 0 6px; font-weight:600}
+.en{font-size:12.5px; letter-spacing:5px; color:#5d6b85; margin-bottom:36px}
+.btns{display:flex; gap:14px; justify-content:center; flex-wrap:wrap}
+.btn{
+  display:inline-block; padding:13px 30px; border-radius:12px; font-weight:700; font-size:15.5px;
+  transition:.18s;
+}
+.btn.pri{background:linear-gradient(135deg,var(--acc),#4a90ee); color:#04101f; box-shadow:0 6px 26px #3d8be055}
+.btn.pri:hover{transform:translateY(-2px); filter:brightness(1.1); color:#04101f}
+.btn.ghost{border:1px solid var(--line); color:var(--txt); background:#0d152680}
+.btn.ghost:hover{border-color:var(--acc); color:#fff}
+.hint{margin-top:18px; font-size:13px; color:var(--dim)}
+
+/* ---------- 区块 ---------- */
+section{padding:84px 0}
+.kicker{font-size:12px; letter-spacing:4px; color:var(--acc); margin-bottom:10px}
+h2{font-size:clamp(27px,4.6vw,38px); font-weight:800; margin-bottom:14px}
+.lead{color:var(--dim); max-width:760px; margin-bottom:44px; font-size:15.5px}
+.center{text-align:center}
+.center .lead{margin-left:auto; margin-right:auto}
+
+/* 视频区 */
+.video-card{
+  background:var(--panel); border:1px solid var(--line); border-radius:20px; overflow:hidden;
+  box-shadow:0 20px 60px #00000066;
+}
+.video-card video{width:100%; display:block; aspect-ratio:16/9; background:#000; object-fit:contain}
+.video-card .vc-foot{display:flex; align-items:center; gap:12px; padding:14px 18px; border-top:1px solid var(--line); background:#0c1322}
+.video-card .vc-foot b{font-size:14.5px}
+.video-card .vc-foot span{color:var(--dim); font-size:13px; margin-right:auto}
+.vsrc{font-size:12.5px; color:var(--dim); border:1px solid var(--line); padding:5px 12px; border-radius:8px; cursor:pointer; background:none}
+.vsrc:hover{border-color:var(--acc); color:#fff}
+.vnote{font-size:12.5px; color:#5d6b85; margin-top:10px}
+
+/* 功能网格 */
+.grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+@media(max-width:860px){ .grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:540px){ .grid{grid-template-columns:1fr} }
+.feat{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:26px 22px;
+  transition:.2s;
+}
+.feat:hover{transform:translateY(-4px); border-color:#33507e; box-shadow:0 14px 40px #0008}
+.feat .ico{
+  width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  font-size:22px; margin-bottom:15px;
+  background:linear-gradient(135deg,#16233d,#101a2e); border:1px solid var(--line);
+}
+.feat b{display:block; font-size:17px; margin-bottom:7px}
+.feat p{color:var(--dim); font-size:14px}
+
+/* 变化列表 */
+.changes{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media(max-width:760px){ .changes{grid-template-columns:1fr} }
+.ch{
+  display:flex; gap:15px; background:#0d1526; border:1px solid var(--line);
+  border-radius:14px; padding:19px 20px;
+}
+.ch .n{
+  flex:0 0 34px; height:34px; border-radius:10px; font-weight:800; font-size:15px;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,var(--acc),var(--acc2)); color:#06101e;
+}
+.ch b{display:block; font-size:15.5px; margin-bottom:4px}
+.ch p{color:var(--dim); font-size:13.8px}
+.note{
+  margin-top:22px; background:#0e1a2e; border:1px solid #27436e; border-radius:14px;
+  padding:18px 22px; color:#bcd2ef; font-size:14.5px;
+}
+
+/* 教程步骤 */
+.steps{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media(max-width:760px){ .steps{grid-template-columns:1fr} }
+.step{background:#0d1526; border:1px solid var(--line); border-radius:14px; padding:19px 20px; display:flex; gap:15px}
+.step .n{
+  flex:0 0 32px; height:32px; border-radius:50%; border:1.5px solid var(--acc);
+  color:var(--acc); font-weight:800; font-size:14.5px;
+  display:flex; align-items:center; justify-content:center;
+}
+.step p{font-size:14.2px; color:#c4d1e6}
+.step p b{color:#fff}
+
+/* 下载 */
+.dl-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+@media(max-width:860px){ .dl-grid{grid-template-columns:1fr} }
+.dl{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:26px 22px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.dl .tag{font-size:12px; letter-spacing:2px; color:var(--acc)}
+.dl b{font-size:18px}
+.dl p{color:var(--dim); font-size:13.8px; flex:1}
+.dl .btn{margin-top:14px; text-align:center}
+
+/* 反馈 */
+.fb{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+@media(max-width:760px){ .fb{grid-template-columns:1fr} }
+.fb-card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:26px 24px}
+.fb-card b{font-size:17px; display:block; margin-bottom:8px}
+.fb-card p{color:var(--dim); font-size:14px; margin-bottom:16px}
+.qq{
+  font-family:ui-monospace,Consolas,monospace; background:#0b1322; border:1px solid var(--line);
+  border-radius:9px; padding:9px 14px; display:inline-block; margin:4px 8px 4px 0; font-size:15px;
+}
+
+footer{border-top:1px solid var(--line); padding:36px 0 44px; color:#5d6b85; font-size:13px; text-align:center}
+footer .wrap{display:flex; flex-direction:column; gap:8px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo"><span class="dot"></span>Star OS</div>
+    <a class="nl" href="#features">功能</a>
+    <a class="nl" href="#changes">变化</a>
+    <a class="nl" href="#videos">视频</a>
+    <a class="nl" href="#install">刷入教程</a>
+    <a class="nl" href="#plugins">插件</a>
+    <a class="cta" href="#download">下载</a>
+  </div>
+</nav>
+
+<!-- ======================= HERO ======================= -->
+<header>
+  <div class="wrap">
+    <div class="badge">SYSTEM OPTIMIZATION · STAR OS</div>
+    <h1 class="title">Star OS</h1>
+    <div class="slogan">您的系统优化首选</div>
+    <div class="en">SYSTEM&nbsp;OPTIMIZATION&nbsp;·&nbsp;STAR&nbsp;OS</div>
+    <div class="btns">
+      <a class="btn pri" href="#download">立即下载</a>
+      <a class="btn ghost" href="#install">刷入教程</a>
+    </div>
+    <div class="hint">免费开源 · 基于 Magisk 模块 · 支持小天才 4100（Z12 主题定制）</div>
+  </div>
+</header>
+
+<!-- ======================= 宣传视频 ======================= -->
+<section id="videos" style="padding-top:30px">
+  <div class="wrap">
+    <div class="kicker">PROMO VIDEO</div>
+    <h2>视频宣传</h2>
+    <p class="lead">看看 Star OS 能把你的设备变成什么样。</p>
+
+    <div class="video-card" data-vsrc="promo-1">
+      <video controls preload="none" playsinline></video>
+      <div class="vc-foot">
+        <b>Star OS 宣传片</b><span>40.6 MB · 点播放加载</span>
+        <button class="vsrc" onclick="switchSrc(this)">切换 GitHub 源</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 功能 ======================= -->
+<section id="features" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="kicker">CORE FEATURES</div>
+    <h2>系统功能介绍</h2>
+    <p class="lead">Star OS 集成六大核心优化模块，从视觉美化到性能提升全方位改造您的设备。刷入后即可自由定制桌面布局、更换精美壁纸与主题，同时解锁系统隐藏功能，深度优化运行性能，让界面焕然一新、操作流畅顺滑。</p>
+    <div class="grid">
+      <div class="feat"><div class="ico">🏠</div><b>修改桌面</b><p>自由调整图标布局、网格大小与抽屉样式，打造专属桌面空间。</p></div>
+      <div class="feat"><div class="ico">🌌</div><b>更换壁纸</b><p>内置精选高清壁纸库，支持 z12 主题与自定义图片一键应用。</p></div>
+      <div class="feat"><div class="ico">🎨</div><b>切换主题</b><p>多套精美主题任选，全局配色、图标包与字体风格同步切换。</p></div>
+      <div class="feat"><div class="ico">⚡</div><b>优化性能</b><p>智能清理后台进程，调控 CPU 与内存调度，显著提升运行速度。</p></div>
+      <div class="feat"><div class="ico">🔓</div><b>解锁功能</b><p>开启系统隐藏开关与高级设置，释放设备全部潜在能力。</p></div>
+      <div class="feat"><div class="ico">✨</div><b>美化界面</b><p>圆角图标、iOS 液态玻璃效果与动画过渡，让系统界面精致动人。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 第二段视频 ======================= -->
+<section>
+  <div class="wrap">
+    <div class="video-card" data-vsrc="promo-2">
+      <video controls preload="none" playsinline></video>
+      <div class="vc-foot">
+        <b>功能实机演示</b><span>27.0 MB · 点播放加载</span>
+        <button class="vsrc" onclick="switchSrc(this)">切换 GitHub 源</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 系统变化 ======================= -->
+<section id="changes" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="kicker">BEFORE / AFTER</div>
+    <h2>系统变化展示</h2>
+    <p class="lead">刷入 Star OS 后，您的设备将在以下方面发生显著变化：</p>
+    <div class="changes">
+      <div class="ch"><div class="n">1</div><div><b>桌面与启动器重构</b><p>图标统一 z12 圆角风格，支持桌面网格自定义与智能 AI 助理。</p></div></div>
+      <div class="ch"><div class="n">2</div><div><b>状态栏与通知中心美化</b><p>iOS 液态玻璃通知面板，图标全新设计。</p></div></div>
+      <div class="ch"><div class="n">3</div><div><b>界面新增高级选项</b><p>解锁隐藏功能，新增省电模式与侧边栏调节开关。</p></div></div>
+      <div class="ch"><div class="n">4</div><div><b>系统动画全面升级</b><p>使应用启动、窗口切换与返回动画更顺滑。</p></div></div>
+      <div class="ch"><div class="n">5</div><div><b>运行性能显著提升</b><p>后台管理优化，优化性能释放，内存占用降低。</p></div></div>
+      <div class="ch"><div class="n">6</div><div><b>快捷功能与侧边栏</b><p>新增智能侧边栏，一键扫码、截屏、录屏与应用快开。</p></div></div>
+    </div>
+    <div class="note">💡 全局主题色统一为 <b>z12 专属风格</b>，设置、文件管理、计算器等系统应用同步焕新。</div>
+  </div>
+</section>
+
+<!-- ======================= 第三段视频 ======================= -->
+<section>
+  <div class="wrap">
+    <div class="video-card" data-vsrc="promo-3">
+      <video controls preload="none" playsinline></video>
+      <div class="vc-foot">
+        <b>系统深度展示</b><span>92.0 MB · 点播放加载</span>
+        <button class="vsrc" onclick="switchSrc(this)">切换 GitHub 源</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 刷入教程 ======================= -->
+<section id="install" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="kicker">HOW TO INSTALL</div>
+    <h2>刷入教程</h2>
+    <p class="lead">按照以下步骤操作，即可完成 Star OS 的刷入。</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><p><b>加群获取模块文件</b>：QQ 群 <b>1128072612</b>，也欢迎关注模块作者 <b>2095369549</b>。</p></div>
+      <div class="step"><div class="n">2</div><p><b>刷入方式</b>：电脑端在 ATB 工具箱内刷入；手表端直接使用面具（Magisk）选择文件刷入。</p></div>
+      <div class="step"><div class="n">3</div><p><b>耐心等待</b>：full 版本处理时间较长；Online 版本需要下载，可能出现异常低速的情况，请耐心等待。</p></div>
+      <div class="step"><div class="n">4</div><p><b>自动检测</b>：刷入过程中系统会自动检测您的设备型号以及是否适配该模块，如不适配会在日志中提醒您。</p></div>
+      <div class="step"><div class="n">5</div><p><b>不要多余操作</b>：刷入过程中不要进行任何多余操作。如出现下载异常低速或长时间无响应，可以断网等待重启。</p></div>
+      <div class="step"><div class="n">6</div><p><b>重启生效</b>：刷入完成后正常重启等待模块生效。如果无法正常开机，用 ADB 禁用该模块，或连续强制重启多次等待救砖功能生效。</p></div>
+      <div class="step"><div class="n">7</div><p><b>尽情探索</b>：感谢您使用 Star OS，开机后请尽情探索您的新设备吧！🎉</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 安装视频 ======================= -->
+<section>
+  <div class="wrap">
+    <div class="kicker">VIDEO GUIDE</div>
+    <h2>安装教程视频</h2>
+    <p class="lead">两种安装方式的完整演示。</p>
+    <div class="video-card" data-vsrc="install-pc" style="margin-bottom:18px">
+      <video controls preload="none" playsinline></video>
+      <div class="vc-foot">
+        <b>电脑安装教程</b><span>12.6 MB · 点播放加载</span>
+        <button class="vsrc" onclick="switchSrc(this)">切换 GitHub 源</button>
+      </div>
+    </div>
+    <div class="video-card" data-vsrc="install-watch">
+      <video controls preload="none" playsinline></video>
+      <div class="vc-foot">
+        <b>手表安装教程</b><span>56.1 MB · 点播放加载</span>
+        <button class="vsrc" onclick="switchSrc(this)">切换 GitHub 源</button>
+      </div>
+    </div>
+    <p class="vnote">视频托管在 GitHub Release；默认走加速线路，如无法播放点「切换 GitHub 源」。</p>
+  </div>
+</section>
+
+<!-- ======================= 下载 ======================= -->
+<section id="download" style="background:var(--bg2)">
+  <div class="wrap center">
+    <div class="kicker">DOWNLOAD</div>
+    <h2>下载 Star OS</h2>
+    <p class="lead">当前版本 <b style="color:var(--txt)">1.5.1</b>。在线版体积小、自动下载资源；离线全量版不依赖网络。</p>
+    <div class="dl-grid" style="text-align:left">
+      <div class="dl">
+        <div class="tag">RECOMMENDED</div>
+        <b>在线版</b>
+        <p>约 200 KB。刷入时自动下载资源包，需要手表联网。以后点「更新」即可 OTA。</p>
+        <a class="btn pri" href="https://cdn.jsdelivr.net/gh/lqbz6office/star-os-assets@main/zz_star_os-1.5.1-online.zip">下载在线版</a>
+      </div>
+      <div class="dl">
+        <div class="tag">OFFLINE</div>
+        <b>离线全量版</b>
+        <p>约 175 MB。内置全部资源，刷入不依赖网络，处理时间较长。</p>
+        <a class="btn ghost" href="https://github.com/lqbz6office/star-os-assets/releases/download/v1.5.1/zz_star_os-1.5.1-full.zip">下载全量版</a>
+      </div>
+      <div class="dl">
+        <div class="tag">PLUGINS</div>
+        <b>插件商店</b>
+        <p>为 Star OS 开发插件，或投稿你的作品到云端商店。</p>
+        <a class="btn ghost" href="https://github.com/lqbz6office/star-os-plugins">进入插件仓库</a>
+      </div>
+    </div>
+    <p class="vnote" style="margin-top:18px">⚠ 仅支持 4100（SDK 27 / Android 8.1）；5100 支持已在 1.5 移除。刷入前请确认设备型号。</p>
+  </div>
+</section>
+
+<!-- ======================= 插件 ======================= -->
+<section id="plugins">
+  <div class="wrap center">
+    <div class="kicker">PLUGINS</div>
+    <h2>插件生态</h2>
+    <p class="lead">Star OS 1.5 起内置插件系统：严格审核 + 逐项授权，支持云端商店与本地安装。</p>
+    <div class="btns">
+      <a class="btn pri" href="https://cdn.jsdelivr.net/gh/lqbz6office/star-os-plugins@main/docs/插件开发文档.md">插件开发文档</a>
+      <a class="btn ghost" href="https://github.com/lqbz6office/star-os-plugins/issues/new?template=plugin-submit.yml">投稿插件</a>
+      <a class="btn ghost" href="https://cdn.jsdelivr.net/gh/lqbz6office/star-os-plugins@main/index.json">插件目录</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 反馈 ======================= -->
+<section id="feedback" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="kicker center" style="text-align:center">FEEDBACK</div>
+    <h2 class="center" style="text-align:center">反馈与交流</h2>
+    <p class="lead center" style="margin-left:auto;margin-right:auto">遇到问题或有新想法？通过以下方式联系我们，反馈会直达开发者。</p>
+    <div class="fb">
+      <div class="fb-card">
+        <b>💬 GitHub 反馈（推荐）</b>
+        <p>提交后开发者会第一时间收到，处理进度可在插件仓库的 Issues 里追踪。</p>
+        <a class="btn pri" href="https://github.com/lqbz6office/star-os-plugins/issues/new?template=feedback.yml">提交反馈</a>
+      </div>
+      <div class="fb-card">
+        <b>👥 QQ 交流群</b>
+        <p>加群获取模块文件、交流使用技巧，也可以直接在群里反馈。</p>
+        <div><span class="qq">群 1128072612</span><span class="qq">作者 2095369549</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><b style="color:#c7d5ea">Star OS</b> · 您的系统优化首选</div>
+    <div>作者：星 · <a href="https://github.com/lqbz6office/star-os-assets">GitHub</a> · <a href="https://github.com/lqbz6office/star-os-plugins">插件商店</a></div>
+  </div>
+</footer>
+
+<script>
+// 视频双源:默认 gh-proxy 加速(国内可达),一键切回 GitHub 直链
+var REL = "https://github.com/lqbz6office/star-os-assets/releases/download/media/";
+var PROXY = "https://gh-proxy.com/";
+function fillVideos(useProxy){
+  document.querySelectorAll(".video-card").forEach(function(card){
+    var name = card.getAttribute("data-vsrc") + ".mp4";
+    var v = card.querySelector("video");
+    if (!v) return;
+    v.src = (useProxy ? PROXY : "") + REL + name;
+  });
+}
+fillVideos(true);
+function switchSrc(btn){
+  var ghMode = btn.getAttribute("data-gh") === "1";
+  btn.setAttribute("data-gh", ghMode ? "0" : "1");
+  btn.textContent = ghMode ? "切换 GitHub 源" : "切换加速源";
+  fillVideos(!ghMode);
+}
+</script>
+</body>
+</html>
