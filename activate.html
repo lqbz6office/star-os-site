@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star OS · 激活与授权查询</title>
+<meta name="description" content="Star OS 授权码激活与等级查询 —— 本地体检格式，云端核对等级与状态。">
+<style>
+:root{
+  --bg:#070b14; --bg2:#0b1120; --panel:#101827cc; --line:#1e2a44;
+  --txt:#e6edf7; --dim:#8b98b0; --acc:#5aa9ff; --acc2:#8b7bff;
+  --ok:#59d99a; --warn:#e8b34a; --bad:#ff7a7a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--txt);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  line-height:1.7; overflow-x:hidden;
+}
+a{color:var(--acc); text-decoration:none}
+a:hover{color:#8cc6ff}
+.wrap{max-width:1080px; margin:0 auto; padding:0 22px}
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:99;
+  background:#070b14d9; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+nav .wrap{display:flex; align-items:center; gap:8px; height:60px}
+.logo{font-weight:800; font-size:19px; letter-spacing:.5px; margin-right:auto; display:flex; align-items:center; gap:9px}
+.logo .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2)); box-shadow:0 0 12px #5aa9ff88}
+nav a.nl{color:var(--dim); font-size:14px; padding:7px 11px; border-radius:8px}
+nav a.nl:hover{color:#fff; background:#141d33}
+nav a.nl.on{color:#fff; background:#141d33}
+nav a.cta{background:linear-gradient(135deg,var(--acc),#4a90ee); color:#04101f; font-weight:700; padding:8px 16px; border-radius:9px}
+@media(max-width:820px){ nav a.nl{display:none} }
+main{padding:120px 0 70px}
+h1{font-size:clamp(28px,5vw,44px); font-weight:900; letter-spacing:.5px; margin-bottom:10px}
+h1 .g{background:linear-gradient(135deg,var(--acc),var(--acc2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+.lead{color:var(--dim); font-size:15px; margin-bottom:26px}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px;
+  padding:26px 24px; margin-bottom:20px;
+}
+.card h2{font-size:17px; margin-bottom:16px; display:flex; align-items:center; gap:9px}
+.card h2 .n{
+  width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--acc),var(--acc2)); color:#04101f; font-size:13px; font-weight:800;
+}
+label{display:block; font-size:13.5px; color:var(--dim); margin-bottom:7px}
+input{
+  width:100%; background:#0a111f; border:1px solid var(--line); border-radius:11px;
+  color:var(--txt); font-size:17px; padding:13px 15px; outline:none;
+  font-family:ui-monospace,Menlo,Consolas,monospace; letter-spacing:1.5px;
+  transition:border-color .15s, box-shadow .15s;
+}
+input:focus{border-color:var(--acc); box-shadow:0 0 0 3px #5aa9ff22}
+input.bad{border-color:var(--bad); box-shadow:0 0 0 3px #ff7a7a22}
+.f{position:relative; margin-bottom:16px}
+.hint{font-size:12.5px; color:var(--dim); margin-top:6px}
+.hint.err{color:var(--bad)}
+.hint.good{color:var(--ok)}
+.btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+button{
+  border:0; border-radius:11px; padding:12px 22px; font-size:15px; font-weight:700;
+  cursor:pointer; font-family:inherit; transition:filter .15s, opacity .15s;
+}
+button.pri{background:linear-gradient(135deg,var(--acc),#4a90ee); color:#04101f}
+button.ghost{background:#141d33; color:var(--txt); border:1px solid var(--line)}
+button:hover{filter:brightness(1.12)}
+button:disabled{opacity:.5; cursor:default; filter:none}
+.pill{
+  display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:700;
+  border-radius:99px; padding:5px 14px; border:1px solid var(--line); background:#0d1526a0;
+}
+.pill.ok{color:var(--ok); border-color:#59d99a55; background:#59d99a14}
+.pill.warn{color:var(--warn); border-color:#e8b34a55; background:#e8b34a14}
+.pill.bad{color:var(--bad); border-color:#ff7a7a55; background:#ff7a7a14}
+#out{display:none; margin-top:4px}
+table{width:100%; border-collapse:collapse; font-size:14.5px}
+td{padding:9px 0; border-bottom:1px solid #1a2438; vertical-align:top}
+td:first-child{color:var(--dim); width:110px; white-space:nowrap}
+td:last-child{font-family:ui-monospace,Menlo,Consolas,monospace; word-break:break-all}
+.tiers{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-top:6px}
+.tier{border:1px solid var(--line); border-radius:13px; padding:16px 17px; background:#0d1526a0}
+.tier.now{border-color:var(--acc); box-shadow:0 0 0 3px #5aa9ff1a}
+.tier .t{font-size:15.5px; font-weight:800; margin-bottom:5px}
+.tier .d{font-size:13px; color:var(--dim)}
+.steps{counter-reset:s; list-style:none}
+.steps li{counter-increment:s; position:relative; padding-left:34px; margin-bottom:11px; font-size:14.5px; color:#c9d4e6}
+.steps li::before{
+  content:counter(s); position:absolute; left:0; top:1px; width:23px; height:23px; border-radius:7px;
+  display:grid; place-items:center; font-size:12.5px; font-weight:800;
+  background:#141d33; color:var(--acc); border:1px solid var(--line);
+}
+code{background:#0a111f; border:1px solid var(--line); border-radius:6px; padding:1.5px 7px; font-size:13.5px}
+footer{border-top:1px solid var(--line); padding:26px 0 40px; color:var(--dim); font-size:13px; text-align:center}
+.spin{display:inline-block; width:14px;height:14px;border:2px solid #5aa9ff55; border-top-color:var(--acc); border-radius:50%; animation:r .8s linear infinite; vertical-align:-2px}
+@keyframes r{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo"><span class="dot"></span>Star OS</div>
+    <a class="nl" href="index.html">首页</a>
+    <a class="nl" href="index.html#features">功能</a>
+    <a class="nl" href="index.html#install">刷入教程</a>
+    <a class="nl on" href="activate.html">激活</a>
+    <a class="cta" href="index.html#download">下载</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <h1>激活与<span class="g">授权查询</span></h1>
+  <p class="lead">
+    输入设备码和授权码 —— 本地先做格式体检（校验位、长度、字符），
+    再向公开授权索引核对等级与状态。<b>授权码不会上传到任何地方</b>，只在您的浏览器里计算。
+  </p>
+
+  <div class="card">
+    <h2><span class="n">1</span>输入</h2>
+    <div class="f">
+      <label for="dc">设备码</label>
+      <input id="dc" placeholder="XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="20">
+      <div class="hint" id="dcHint">在手表上：Star OS 应用 → 插件中心 → Pro 版，页面上方会显示本机设备码</div>
+    </div>
+    <div class="f">
+      <label for="cdk">授权码 (CDK)</label>
+      <input id="cdk" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" spellcheck="false" maxlength="40">
+      <div class="hint" id="cdkHint">25 位，5 组。不区分大小写，横线可省略，O/I/L 会自动纠正</div>
+    </div>
+    <div class="btns">
+      <button class="pri" id="go">查询</button>
+      <button class="ghost" id="clear">清空</button>
+    </div>
+  </div>
+
+  <div class="card" id="out">
+    <h2><span class="n">2</span>结果</h2>
+    <div id="verdict" style="margin-bottom:16px"></div>
+    <table id="detail"></table>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">3</span>怎么激活</h2>
+    <ol class="steps">
+      <li>手表上打开 <b>Star OS</b> 应用</li>
+      <li>进入 <b>插件中心 → Pro 版</b>（或首页右上角「实验室」的等级提示）</li>
+      <li>填入上面的<b>设备码</b>与<b>授权码</b>，点激活</li>
+      <li>激活后应用会<b>联网向授权台账核验一次</b>，等级即时生效</li>
+    </ol>
+    <p class="hint" style="margin-top:14px">
+      等级说明：Pro 能用插件生态；<b>Pro+ / 终身版</b>解锁「实验室」——
+      星际指令（自动化）、星链面板（局域网遥控）、表盘工坊（一键换装）。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">4</span>等级对照</h2>
+    <div class="tiers">
+      <div class="tier" id="t1"><div class="t">Pro</div><div class="d">插件生态、系统优化全功能</div></div>
+      <div class="tier" id="t2"><div class="t">Pro+</div><div class="d">Pro 全部 + 实验室三件套</div></div>
+      <div class="tier" id="t3"><div class="t">终身版</div><div class="d">Pro+ 全部 + 后续新功能不再付费</div></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Star OS · 作者：星 ·
+  <a href="https://github.com/lqbz6office/star-os-assets">GitHub</a> ·
+  <a href="index.html">返回首页</a>
+</footer>
+
+<script>
+"use strict";
+/* Crockford Base32 —— 与模块侧 staros_license.py 逐字对应 */
+var ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+var LOOKUP = {};
+for (var i = 0; i < ALPHABET.length; i++) LOOKUP[ALPHABET[i]] = i;
+LOOKUP["I"] = 1; LOOKUP["L"] = 1; LOOKUP["O"] = 0; LOOKUP["U"] = 27;
+
+var TIERS = {1: "Pro", 2: "Pro+", 3: "终身版"};
+var CDK_LEN = 25, PAYLOAD_LEN = 15;
+
+/* 索引地址:与客户端一致的镜像轮试 */
+var INDEX_URLS = [
+  "https://gh-proxy.com/https://raw.githubusercontent.com/lqbz6office/star-os-assets/main/lic/index.json",
+  "https://cdn.jsdelivr.net/gh/lqbz6office/star-os-assets@main/lic/index.json",
+  "https://raw.githubusercontent.com/lqbz6office/star-os-assets/main/lic/index.json"
+];
+
+function $(id) { return document.getElementById(id); }
+
+/* 与 normalize_cdk 一致:去非字母数字 + 大写 */
+function normCdk(s) {
+  return (s || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
+}
+/* 与 norm_device_code 一致:去非字母数字 + 大写 + 纠正混淆字符 */
+function normDc(s) {
+  var t = (s || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
+  var out = "";
+  for (var i = 0; i < t.length; i++) {
+    var c = t[i];
+    if (ALPHABET.indexOf(c) >= 0) { out += c; }
+    else if (c === "I" || c === "L") { out += "1"; }
+    else if (c === "O") { out += "0"; }
+    else if (c === "U") { out += "T"; }
+    else { out += c; }
+  }
+  return out;
+}
+function prettyDc(d) { return d.replace(/(.{4})/g, "$1-").replace(/-$/, ""); }
+function prettyCdk(s) { return (s.match(/.{1,5}/g) || []).join("-"); }
+
+/* 第 25 位校验:加权和 mod 32 —— 本地就能算,不需要密钥 */
+function checkChar(vals) {
+  var s = 0;
+  for (var i = 0; i < vals.length; i++) s += (i + 1) * vals[i];
+  return ALPHABET[s % 32];
+}
+
+function parseCdk(raw) {
+  var s = normCdk(raw);
+  if (s.length !== CDK_LEN) {
+    return { ok: false, reason: "长度不对（应 25 位，收到 " + s.length + " 位）" };
+  }
+  var vals = [];
+  for (var i = 0; i < s.length; i++) {
+    var c = s[i];
+    if (LOOKUP[c] === undefined) return { ok: false, reason: "含非法字符 " + c };
+    vals.push(LOOKUP[c]);
+  }
+  if (checkChar(vals.slice(0, 24)) !== s[24]) {
+    return { ok: false, reason: "校验位不符（大概率是输错了一位）" };
+  }
+  /* 解出 15 字节 payload:byte8=tier, byte9=serial */
+  var acc = 0, bits = 0, body = [];
+  for (var k = 0; k < 24; k++) {
+    acc = ((acc << 5) | LOOKUP[s[k]]) >>> 0;
+    bits += 5;
+    if (bits >= 8) { bits -= 8; body.push((acc >>> bits) & 0xFF); }
+  }
+  if (body.length < PAYLOAD_LEN) return { ok: false, reason: "数据不完整" };
+  return { ok: true, normalized: s, tier: body[8], serial: body[9] };
+}
+
+function sha256hex(str) {
+  var enc = new TextEncoder().encode(str);
+  return crypto.subtle.digest("SHA-256", enc).then(function (buf) {
+    var b = new Uint8Array(buf), out = "";
+    for (var i = 0; i < b.length; i++) out += ("0" + b[i].toString(16)).slice(-2);
+    return out;
+  });
+}
+
+function fetchIndex() {
+  var i = 0;
+  function tryNext() {
+    if (i >= INDEX_URLS.length) return Promise.reject(new Error("索引拉取失败（网络问题）"));
+    var url = INDEX_URLS[i++];
+    return fetch(url, { cache: "no-cache" }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    }).catch(tryNext);
+  }
+  return tryNext();
+}
+
+function setVerdict(cls, icon, text) {
+  $("verdict").innerHTML = '<span class="pill ' + cls + '">' + icon + " " + text + "</span>";
+}
+function rows(list) {
+  var h = "";
+  for (var i = 0; i < list.length; i++) {
+    if (list[i][1] === null || list[i][1] === undefined || list[i][1] === "") continue;
+    h += "<tr><td>" + list[i][0] + "</td><td>" + list[i][1] + "</td></tr>";
+  }
+  $("detail").innerHTML = h;
+}
+
+/* -------- 输入实时体检 -------- */
+function liveCheck() {
+  var dc = normDc($("dc").value);
+  var dh = $("dcHint");
+  if (!dc) { dh.className = "hint"; dh.textContent = "在手表上：Star OS 应用 → 插件中心 → Pro 版，页面上方会显示本机设备码"; $("dc").classList.remove("bad"); }
+  else if (dc.length !== 12) { dh.className = "hint err"; dh.textContent = "设备码应为 12 位，当前 " + dc.length + " 位"; $("dc").classList.add("bad"); }
+  else { dh.className = "hint good"; dh.textContent = "格式正确：" + prettyDc(dc); $("dc").classList.remove("bad"); }
+
+  var ch = $("cdkHint"), p = null;
+  var raw = $("cdk").value;
+  if (!raw) { ch.className = "hint"; ch.textContent = "25 位，5 组。不区分大小写，横线可省略，O/I/L 会自动纠正"; $("cdk").classList.remove("bad"); return; }
+  p = parseCdk(raw);
+  if (!p.ok) { ch.className = "hint err"; ch.textContent = p.reason; $("cdk").classList.add("bad"); }
+  else {
+    ch.className = "hint good";
+    ch.textContent = "格式正确 · 码内声明等级：" + (TIERS[p.tier] || ("未知(" + p.tier + ")"));
+    $("cdk").classList.remove("bad");
+  }
+}
+
+$("dc").addEventListener("input", liveCheck);
+$("cdk").addEventListener("input", liveCheck);
+$("clear").addEventListener("click", function () {
+  $("dc").value = ""; $("cdk").value = "";
+  $("out").style.display = "none";
+  ["t1", "t2", "t3"].forEach(function (t) { $(t).classList.remove("now"); });
+  liveCheck();
+});
+
+$("go").addEventListener("click", function () {
+  var dc = normDc($("dc").value);
+  var p = parseCdk($("cdk").value);
+  $("out").style.display = "block";
+
+  if (!dc || dc.length !== 12) {
+    setVerdict("bad", "✗", "设备码格式不对");
+    rows([["说明", "设备码应是 12 位 Crockford 字符，形如 XXXX-XXXX-XXXX"]]);
+    return;
+  }
+  if (!p.ok) {
+    setVerdict("bad", "✗", "授权码格式不对");
+    rows([["说明", p.reason], ["提示", "请照着手表上显示的原文再核对一遍，注意 0/O、1/I/L 容易看混"]]);
+    return;
+  }
+
+  $("go").disabled = true;
+  setVerdict("warn", "", '正在核对授权台账 <span class="spin"></span>');
+  rows([["授权码", prettyCdk(p.normalized)], ["设备码", prettyDc(dc)]]);
+
+  sha256hex(p.normalized).then(function (hex) {
+    var key = hex.slice(0, 16);
+    return fetchIndex().then(function (idx) {
+      var rec = (idx && idx.entries && idx.entries[key]) || null;
+      var list = [
+        ["授权码", prettyCdk(p.normalized)],
+        ["设备码", prettyDc(dc)],
+        ["索引号", key],
+        ["码内声明", TIERS[p.tier] || ("未知等级(" + p.tier + ")")],
+        ["签发序号", String(p.serial)]
+      ];
+      if (!rec) {
+        setVerdict("bad", "✗", "这张授权码不在案");
+        list.push(["结论", "格式合法，但没有在授权台账里登记 —— 可能是伪造、拼抄错误，或尚未签发"]);
+        list.push(["怎么办", "找作者确认；官方签发的码一定会出现在台账里"]);
+        rows(list);
+        return;
+      }
+      var t = TIERS[rec.t] || ("未知(" + rec.t + ")");
+      list.push(["台账等级", "<b>" + t + "</b>"]);
+      list.push(["台账状态", rec.s === "active" ? "生效中" : ("已停用（" + rec.s + "）")]);
+      list.push(["台账绑定", prettyDc(String(rec.dc || "").toUpperCase())]);
+      list.push(["签发时间", rec.at ? String(rec.at).replace("T", " ").replace("Z", " UTC") : "-"]);
+
+      if (rec.s !== "active") {
+        setVerdict("bad", "✗", "这张授权码已被停用");
+        list.push(["结论", "码本身有效，但已被作者停用（可能退款/换码/违规）"]);
+        rows(list);
+        return;
+      }
+      if (String(rec.dc || "").toUpperCase() !== dc) {
+        setVerdict("warn", "!", "码有效，但不是给这台设备的");
+        list.push(["结论", "这张码绑定的设备码和您输入的不一致 —— 换机器就会失效（与设计一致）"]);
+        rows(list);
+        return;
+      }
+      setVerdict("ok", "✓", "有效 · " + t);
+      list.push(["结论", "<b>这张授权码有效，且正是签发给本机的</b> — 可以激活"]);
+      rows(list);
+      var id = { 1: "t1", 2: "t2", 3: "t3" }[rec.t];
+      if (id) $(id).classList.add("now");
+    });
+  }).catch(function (e) {
+    setVerdict("warn", "!", "查不到台账（网络问题）");
+    rows([["授权码", prettyCdk(p.normalized)], ["设备码", prettyDc(dc)],
+          ["本地结论", "格式合法，校验位正确"],
+          ["云端", "拉取授权索引失败：" + (e && e.message ? e.message : e)],
+          ["说明", "不联网无法确认等级与绑定关系。手机会在激活时自行联网核验。"]]);
+  }).then(function () {
+    $("go").disabled = false;
+  });
+});
+
+liveCheck();
+</script>
+</body>
+</html>
