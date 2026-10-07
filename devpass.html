@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star OS · 开发者通行证获取说明</title>
+<meta name="description" content="想往 Star OS 商店投稿插件 / 上传表盘？不用等作者，拿设备码在官网自助生成一张开发者通行证，即可登录开发者平台。">
+<style>
+:root{
+  --bg:#070b14; --bg2:#0b1120; --panel:#101827cc; --line:#1e2a44;
+  --txt:#e6edf7; --dim:#8b98b0; --acc:#5aa9ff; --acc2:#8b7bff;
+  --ok:#59d99a; --warn:#e8b34a; --bad:#ff7a7a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--txt);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  line-height:1.7; overflow-x:hidden;
+}
+a{color:var(--acc); text-decoration:none}
+a:hover{color:#8cc6ff}
+.wrap{max-width:940px; margin:0 auto; padding:0 22px}
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:99;
+  background:#070b14d9; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+nav .wrap{max-width:1080px; display:flex; align-items:center; gap:8px; height:60px}
+.logo{font-weight:800; font-size:19px; letter-spacing:.5px; margin-right:auto; display:flex; align-items:center; gap:9px}
+.logo .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2)); box-shadow:0 0 12px #5aa9ff88}
+nav a.nl{color:var(--dim); font-size:14px; padding:7px 11px; border-radius:8px}
+nav a.nl:hover{color:#fff; background:#141d33}
+nav a.nl.on{color:#fff; background:#141d33}
+nav a.cta{background:linear-gradient(135deg,var(--acc),#4a90ee); color:#04101f; font-weight:700; padding:8px 16px; border-radius:9px}
+@media(max-width:820px){ nav a.nl{display:none} }
+main{padding:120px 0 70px}
+h1{font-size:clamp(26px,5vw,40px); font-weight:900; letter-spacing:.5px; margin-bottom:10px}
+h1 .g{background:linear-gradient(135deg,var(--acc),var(--acc2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+.lead{color:var(--dim); font-size:15px; margin-bottom:26px}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px;
+  padding:26px 24px; margin-bottom:20px;
+}
+.card h2{font-size:17px; margin-bottom:16px; display:flex; align-items:center; gap:9px}
+.card h2 .n{
+  width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--acc),var(--acc2)); color:#04101f; font-size:13px; font-weight:800;
+}
+.card p{font-size:14.5px; color:#c9d4e6; margin-bottom:12px}
+.card p:last-child{margin-bottom:0}
+b{color:#fff}
+.steps{counter-reset:s; list-style:none}
+.steps li{counter-increment:s; position:relative; padding-left:36px; margin-bottom:16px; font-size:14.5px; color:#c9d4e6}
+.steps li::before{
+  content:counter(s); position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:7px;
+  display:grid; place-items:center; font-size:13px; font-weight:800;
+  background:linear-gradient(135deg,var(--acc),var(--acc2)); color:#04101f;
+}
+.steps li b{display:block; color:#fff; margin-bottom:2px}
+.steps li span.m{font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--acc)}
+table{width:100%; border-collapse:collapse; font-size:14.5px; margin-top:4px}
+th,td{padding:10px 10px 10px 0; border-bottom:1px solid #1a2438; text-align:left; vertical-align:top}
+th{color:var(--dim); font-size:13px; font-weight:600; white-space:nowrap}
+td:first-child{color:var(--dim); width:130px; white-space:nowrap}
+table tr:last-child td{border-bottom:0}
+.btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+.btn{border:0; border-radius:11px; padding:12px 22px; font-size:15px; font-weight:700; cursor:pointer;
+     font-family:inherit; display:inline-block; transition:filter .15s}
+.btn.pri{background:linear-gradient(135deg,var(--acc),#4a90ee); color:#04101f}
+.btn.ghost{background:#141d33; color:var(--txt); border:1px solid var(--line)}
+.btn:hover{filter:brightness(1.12)}
+code{background:#0a111f; border:1px solid var(--line); border-radius:6px; padding:1.5px 7px; font-size:13.5px}
+.note{border-left:3px solid var(--warn); background:#e8b34a0f; border-radius:0 10px 10px 0; padding:12px 15px; font-size:13.8px; color:#dcc79a; margin-top:12px}
+.ok{border-left-color:var(--ok); background:#59d99a0f; color:#a9e3c5}
+.qa{margin-top:2px}
+.qa dt{font-weight:700; color:#fff; font-size:14.5px; margin-top:14px}
+.qa dt:first-child{margin-top:0}
+.qa dd{color:#c9d4e6; font-size:14px; margin-top:3px}
+footer{border-top:1px solid var(--line); padding:26px 0 40px; color:var(--dim); font-size:13px; text-align:center}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo"><span class="dot"></span>Star OS</div>
+    <a class="nl" href="index.html">首页</a>
+    <a class="nl" href="index.html#features">功能</a>
+    <a class="nl" href="index.html#install">刷入教程</a>
+    <a class="nl" href="activate.html">激活</a>
+    <a class="nl on" href="devpass.html">开发者通行证</a>
+    <a class="cta" href="index.html#download">下载</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <h1>开发者通行证 · <span class="g">获取说明</span></h1>
+  <p class="lead">
+    想往 Star OS 商店投稿插件、上传表盘，手上却还没有授权码？<b>不用等作者回消息</b> ——
+    拿你自己的手表设备码，在官网当场就能自助生成一张<b>开发者通行证</b>，用它登录
+    <b>Star OS 开发者平台</b>投稿。<span style="color:var(--ok)">Pro 是免费的，这一步不花钱。</span>
+  </p>
+
+  <div class="card">
+    <h2><span class="n">①</span>三步拿到通行证</h2>
+    <ol class="steps">
+      <li>
+        <b>看设备码</b>
+        手表上打开 <b>Star OS 应用 → 插件中心 → Pro 版</b>，页面上方显示的
+        <span class="m">XXXX-XXXX-XXXX</span> 就是本机设备码。记下来（12 位，带横线）。
+      </li>
+      <li>
+        <b>在官网生成通行证</b>
+        打开官网「<a href="activate.html#pdc">激活</a>」页，翻到第 5 张卡片
+        <b>「开发者通行证（自助）」</b>，把设备码粘进去，点「生成通行证」。
+        浏览器里当场算出一串 <b>25 位</b>的通行证（形如
+        <span class="m">DG7C5-ZMK6X-G7T08-06WEB-FA7JV</span>）—— 点「复制」存好。
+        <div class="note ok">
+          全部计算在你的浏览器里完成，<b>设备码不会上传到任何服务器</b>；
+          通行证是公开算法算的，不含任何密钥，别人猜到也不会影响你的手表。
+        </div>
+      </li>
+      <li>
+        <b>下载开发者平台并登录</b>
+        到官网「<a href="index.html#download">下载</a>」区取 <b>开发者平台</b>（Windows）。
+        打开后在登录页填：<b>设备码 + 通行证</b> → 登录成功。
+        <div class="note">
+          首次用通行证登录时，平台会自动把这张通行证<b>登记进授权台账</b>（标记为「官网自助」），
+          之后再登录就直接命中，不用重复操作。
+        </div>
+      </li>
+    </ol>
+    <div class="btns" style="margin-top:18px">
+      <a class="btn pri" href="activate.html#pdc">去生成通行证</a>
+      <a class="btn ghost" href="index.html#download">下载开发者平台</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">②</span>通行证和「授权码」有什么区别？</h2>
+    <p>两者都是 25 位、都带校验位，长得像，但<b>用途和验证链完全不同</b>：</p>
+    <table>
+      <tr><th></th><th>开发者通行证（本页讲的）</th><th>授权码 CDK（作者签发）</th></tr>
+      <tr><td>怎么来</td><td>官网自助生成，输入设备码即可</td><td>作者在审核器里签发，须提供设备码</td></tr>
+      <tr><td>能干什么</td><td>登录开发者平台，投稿插件 / 上传表盘</td><td>在手表上激活 Pro / Pro+ / 终身版</td></tr>
+      <tr><td>能激活手表吗</td><td><b style="color:var(--bad)">不能</b>，手表不认这条链</td><td>能，且绑定你这台设备</td></tr>
+      <tr><td>换台手表还能用吗</td><td>不能，重新生成一张即可</td><td>不能，一码一机</td></tr>
+      <tr><td>算错了能造假的吗</td><td>算得出格式合法的，但登录只认台账登记，伪造无效</td><td>算不出，签名需要作者私钥</td></tr>
+    </table>
+    <div class="note">
+      一句话：<b>通行证是「投稿入场券」，授权码是「手表通行证」。</b>
+      想解锁手表上的 Pro 功能，请找作者拿授权码；只是想投稿，用通行证就够。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">③</span>常见问题</h2>
+    <dl class="qa">
+      <dt>通行证要钱吗？会过期吗？</dt>
+      <dd>不要钱，也不过期。它是本地算出来的（只取决于设备码），随时可以重新算一张，每次都一样。</dd>
+
+      <dt>能直接把我的通行证发给朋友用吗？</dt>
+      <dd>没用。通行证是<b>和设备码绑死</b>的：平台会核对「登录时填的设备码」和「通行证里的指纹」是否匹配，
+        换台手表就报「绑定的是别的设备」。朋友要用，让他自己花 30 秒生成一张。</dd>
+
+      <dt>官网凭什么能"发码"？是不是偷偷拿走了我的设备码？</dt>
+      <dd>没有发码，也没有上传。页面是纯静态的，只在你的浏览器里跑一段公开的 sha256 计算 ——
+        你可以拔掉网线再点生成，结果一模一样。通行证里<b>不含任何密钥</b>，
+        真正的授权码走的是另一套带密钥的签名，官网在数学上造不出来。</dd>
+
+      <dt>登录时提示「授权码没有登记在案」/「绑定的是别的设备」怎么办？</dt>
+      <dd>前者一般是通行证抄漏了字符（25 位，别漏掉中间的横线），重新复制一次；
+        后者是设备码填错了 —— 请用通行证<b>对应的那台手表</b>的设备码登录。
+        平台上登录信息填的是设备码 + 通行证，两者必须是一对。</dd>
+
+      <dt>手表没刷 Star OS，能投稿插件吗？</dt>
+      <dd>不行。设备码来自手表上的 Star OS 应用，没有设备码就生成不了通行证。
+        建议先刷机再开发 —— 否则也没法自测插件。</dd>
+
+      <dt>投稿之后呢？</dt>
+      <dd>你的插件会进作者的审核队列（人工审 + 自动查包体/权限/脚本红线），
+        通过后上架到 Star OS 商店，手表端「插件中心」就能搜到。</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">④</span>还有问题？</h2>
+    <p>手表端可以在 <b>Star OS 应用 → 插件中心 → 投稿/反馈</b> 里直接留意见；
+    也可以在 <a href="https://github.com/lqbz6office/star-os-inbox">投稿箱仓库</a> 提 issue。
+    开发者平台里也自带开发文档和教程页。</p>
+  </div>
+</main>
+
+<footer>
+  Star OS · 作者：星 ·
+  <a href="https://github.com/lqbz6office/star-os-assets">GitHub</a> ·
+  <a href="index.html">返回首页</a>
+</footer>
+
+</body>
+</html>
