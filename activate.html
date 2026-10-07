@@ -163,6 +163,28 @@ footer{border-top:1px solid var(--line); padding:26px 0 40px; color:var(--dim); 
       <div class="tier" id="t2"><div class="t">Pro+</div><div class="d">Pro 全部 + 实验室三件套</div></div>
       <div class="tier" id="t3"><div class="t">终身版</div><div class="d">Pro+ 全部 + 后续新功能不再付费</div></div>
     </div>
+  <div class="card">
+    <h2><span class="n">5</span>开发者通行证（自助）</h2>
+    <p class="hint" style="margin-bottom:14px">
+      想往 Star OS 商店投稿插件 / 上传表盘，手上却还没有授权码？<b>Pro 是免费的</b> ——
+      填入你的设备码，这里当场给你算一张<b>开发者通行证</b>，拿它就能登录
+      <b>Star OS 开发者平台</b>投稿。<br>
+      ⚠ 它是「投稿入场券」，<b>不能用来激活手表</b>（手表只认作者签发的授权码）。
+      全部计算在您的浏览器里完成，设备码不会上传到任何地方。
+    </p>
+    <div class="f">
+      <label for="pdc">你的手表设备码</label>
+      <input id="pdc" placeholder="XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="20">
+      <div class="hint" id="pdcHint">手表上：Star OS 应用 → 插件中心 → Pro 版，页面上方显示本机设备码</div>
+    </div>
+    <div class="btns">
+      <button class="pri" id="pgen">生成通行证</button>
+      <button class="ghost" id="pcopy" style="display:none">复制</button>
+    </div>
+    <div id="pout" style="display:none; margin-top:18px">
+      <div id="pverdict" style="margin-bottom:14px"></div>
+      <table id="pdetail"></table>
+    </div>
   </div>
 </main>
 
@@ -251,6 +273,45 @@ function sha256hex(str) {
     var b = new Uint8Array(buf), out = "";
     for (var i = 0; i < b.length; i++) out += ("0" + b[i].toString(16)).slice(-2);
     return out;
+  });
+}
+
+/* ---------------- 开发者通行证（自助，公开算法 · 无密钥） ----------------
+   与模块侧 staros_license.make_devpass 逐字节对应：
+     dev_fp  = sha256("STAROS-DEV|" + 归一化设备码)[0:8]
+     head    = dev_fp(8B) + tier(1B) + serial(1B)            // 10 字节
+     mac     = sha256("STAROS-DEVPASS|" + head)[0:5]
+     payload = dev_fp + tier + serial + mac                  // 15B -> 24 字符 + 校验位
+   ⚠ 必须对**字节**做 sha256 —— 把字节拼成字符串再 hash，UTF-8 会把 >=0x80 的
+     字节变形，算出来就和 Python 侧对不上（踩过这种坑）。                        */
+function sha256bin(u8) {
+  return crypto.subtle.digest("SHA-256", u8).then(function (b) { return new Uint8Array(b); });
+}
+function catBytes(a, b) {
+  var o = new Uint8Array(a.length + b.length);
+  o.set(a, 0); o.set(b, a.length);
+  return o;
+}
+function b32enc(bytes) {
+  var out = "", acc = 0, bits = 0;
+  for (var i = 0; i < bytes.length; i++) {
+    acc = ((acc << 8) | bytes[i]) >>> 0; bits += 8;
+    while (bits >= 5) { out += ALPHABET[(acc >>> (bits - 5)) & 31]; bits -= 5; }
+  }
+  if (bits > 0) out += ALPHABET[(acc << (5 - bits)) & 31];
+  return out;
+}
+function makeDevPass(dc) {
+  return sha256bin(new TextEncoder().encode("STAROS-DEV|" + dc)).then(function (h) {
+    var head = new Uint8Array(10);
+    head.set(h.slice(0, 8), 0); head[8] = 1; head[9] = 0;
+    return sha256bin(catBytes(new TextEncoder().encode("STAROS-DEVPASS|"), head)).then(function (m) {
+      var pay = new Uint8Array(15);
+      pay.set(head, 0); pay.set(m.slice(0, 5), 10);
+      var chars = b32enc(pay), vals = [];
+      for (var i = 0; i < chars.length; i++) vals.push(LOOKUP[chars[i]]);
+      return prettyCdk(chars + checkChar(vals));
+    });
   });
 }
 
@@ -380,6 +441,66 @@ $("go").addEventListener("click", function () {
     $("go").disabled = false;
   });
 });
+
+/* -------- 开发者通行证：输入体检 + 生成 + 复制 -------- */
+var _pass = "";
+function passHint() {
+  var dc = normDc($("pdc").value), h = $("pdcHint");
+  if (!dc) {
+    h.className = "hint";
+    h.textContent = "手表上：Star OS 应用 → 插件中心 → Pro 版，页面上方显示本机设备码";
+    $("pdc").classList.remove("bad");
+  } else if (dc.length !== 12) {
+    h.className = "hint err";
+    h.textContent = "设备码应为 12 位，当前 " + dc.length + " 位";
+    $("pdc").classList.add("bad");
+  } else {
+    h.className = "hint good";
+    h.textContent = "格式正确：" + prettyDc(dc);
+    $("pdc").classList.remove("bad");
+  }
+}
+function passFail(msg) {
+  $("pout").style.display = "block";
+  $("pverdict").innerHTML = '<span class="pill bad">✗ ' + msg + "</span>";
+  $("pdetail").innerHTML = "";
+}
+$("pdc").addEventListener("input", passHint);
+$("pgen").addEventListener("click", function () {
+  var dc = normDc($("pdc").value);
+  if (dc.length !== 12) { passFail("设备码应为 12 位（形如 XXXX-XXXX-XXXX）"); return; }
+  $("pgen").disabled = true;
+  $("pout").style.display = "block";
+  $("pverdict").innerHTML = '<span class="spin"></span> 正在本地计算…';
+  $("pdetail").innerHTML = "";
+  makeDevPass(dc).then(function (cdk) {
+    _pass = cdk;
+    $("pverdict").innerHTML = '<span class="pill ok">✓ 已生成开发者通行证</span>';
+    $("pcopy").style.display = "";
+    $("pdetail").innerHTML =
+      "<tr><td>通行证</td><td style='color:#fff;font-weight:800;font-size:16px'>" + cdk + "</td></tr>" +
+      "<tr><td>设备码</td><td>" + prettyDc(dc) + "</td></tr>" +
+      "<tr><td>等级</td><td>Pro（免费 · 投稿用）</td></tr>" +
+      "<tr><td>用途</td><td>在 Star OS 开发者平台用「设备码 + 这串通行证」登录，投稿插件 / 上传表盘</td></tr>" +
+      "<tr><td>注意</td><td>不能激活手表 —— 手表只认作者签发的授权码；这张证只对开放平台有效</td></tr>" +
+      "<tr><td>下一步</td><td>打开开发者平台 → 登录（首次登录会自动登记进台账）→ 上传模块送审</td></tr>";
+  }).catch(function (e) {
+    passFail("生成失败：" + (e && e.message ? e.message : e));
+  }).then(function () { $("pgen").disabled = false; });
+});
+$("pcopy").addEventListener("click", function () {
+  if (!_pass) return;
+  function done() {
+    $("pcopy").textContent = "已复制";
+    setTimeout(function () { $("pcopy").textContent = "复制"; }, 1400);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(_pass).then(done, function () { window.prompt("手动复制这串通行证：", _pass); });
+  } else {
+    window.prompt("手动复制这串通行证：", _pass);
+  }
+});
+passHint();
 
 liveCheck();
 </script>
