@@ -142,7 +142,7 @@ h2{font-size:clamp(27px,4.6vw,38px); font-weight:800; margin-bottom:14px}
 .step p b{color:#fff}
 
 /* 下载 */
-.dl-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+.dl-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(228px,1fr)); gap:16px}
 @media(max-width:860px){ .dl-grid{grid-template-columns:1fr} }
 .dl{
   background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:26px 22px;
@@ -342,6 +342,12 @@ footer .wrap{display:flex; flex-direction:column; gap:8px}
         <b>插件商店</b>
         <p>为 Star OS 开发插件，或投稿你的作品到云端商店。</p>
         <a class="btn ghost" href="https://github.com/lqbz6office/star-os-plugins">进入插件仓库</a>
+      </div>
+      <div class="dl">
+        <div class="tag">FOR DEVELOPERS</div>
+        <b>开发者平台</b>
+        <p>Windows 桌面端：上传插件、表盘送审，管理自己的投稿。手上没有码也可以去「<a href="activate.html">激活</a>」页自助生成一张开发者通行证。</p>
+        <a class="btn ghost" href="https://github.com/lqbz6office/star-os-assets/releases/download/devplatform-1.1.1/StarOS-DevPlatform-1.1.1.exe">下载开发者平台</a>
       </div>
     </div>
     <p class="vnote" style="margin-top:18px">⚠ 仅支持 4100（SDK 27 / Android 8.1）；5100 支持已在 1.5 移除。刷入前请确认设备型号。</p>
