@@ -329,15 +329,15 @@ footer .wrap{display:flex; flex-direction:column; gap:8px}
         <div class="tag">RECOMMENDED</div>
         <b>在线版</b>
         <p>约 200 KB。刷入时自动下载资源包，需要手表联网。以后点「更新」即可 OTA。</p>
-        <a class="btn pri" href="https://cdn.jsdelivr.net/gh/lqbz6office/star-os-assets@main/zz_star_os-3.0.1-online.zip">下载在线版</a>
-        <p class="alt">打不开？<a href="https://gh-proxy.com/https://raw.githubusercontent.com/lqbz6office/star-os-assets/main/zz_star_os-3.0.1-online.zip">镜像下载</a></p>
+                <a class="btn pri" href="https://staros.lqbz.dpdns.org/gh/lqbz6office/star-os-assets/main/zz_star_os-3.0.1-online.zip">下载在线版</a>
+                <p class="alt">打不开？<a href="https://gh-proxy.com/https://raw.githubusercontent.com/lqbz6office/star-os-assets/main/zz_star_os-3.0.1-online.zip">备用镜像</a></p>
       </div>
       <div class="dl">
         <div class="tag">OFFLINE</div>
         <b>离线全量版</b>
         <p>约 175 MB。内置全部资源，刷入不依赖网络，处理时间较长。</p>
-        <a class="btn ghost" href="https://gh-proxy.com/https://github.com/lqbz6office/star-os-assets/releases/download/v3.0.1/zz_star_os-3.0.1-full.zip">下载全量版</a>
-        <p class="alt">镜像不通时用<a href="https://github.com/lqbz6office/star-os-assets/releases/download/v3.0.1/zz_star_os-3.0.1-full.zip">GitHub 直链</a></p>
+                <a class="btn ghost" href="https://staros.lqbz.dpdns.org/rel/lqbz6office/star-os-assets/v3.0.1/zz_star_os-3.0.1-full.zip">下载全量版</a>
+                <p class="alt">打不开？<a href="https://gh-proxy.com/https://github.com/lqbz6office/star-os-assets/releases/download/v3.0.1/zz_star_os-3.0.1-full.zip">备用镜像</a></p>
       </div>
       <div class="dl">
         <div class="tag">PLUGINS</div>
@@ -349,8 +349,8 @@ footer .wrap{display:flex; flex-direction:column; gap:8px}
         <div class="tag">FOR DEVELOPERS</div>
         <b>开发者平台</b>
         <p>Windows 桌面端：上传插件、表盘送审，管理自己的投稿。手上没有码也可以去「<a href="activate.html">激活</a>」页自助生成一张开发者通行证（<a href="devpass.html">获取说明</a>）。</p>
-        <a class="btn ghost" href="https://gh-proxy.com/https://github.com/lqbz6office/star-os-assets/releases/download/devplatform-1.1.1/StarOS-DevPlatform-1.1.1.exe">下载开发者平台</a>
-        <p class="alt">镜像不通时用<a href="https://github.com/lqbz6office/star-os-assets/releases/download/devplatform-1.1.1/StarOS-DevPlatform-1.1.1.exe">GitHub 直链</a></p>
+                <a class="btn ghost" href="https://staros.lqbz.dpdns.org/rel/lqbz6office/star-os-assets/devplatform-1.1.1/StarOS-DevPlatform-1.1.1.exe">下载开发者平台</a>
+                <p class="alt">打不开？<a href="https://gh-proxy.com/https://github.com/lqbz6office/star-os-assets/releases/download/devplatform-1.1.1/StarOS-DevPlatform-1.1.1.exe">备用镜像</a></p>
       </div>
     </div>
     <p class="vnote" style="margin-top:18px">⚠ 仅支持 4100（SDK 27 / Android 8.1）；5100 支持已在 1.5 移除。刷入前请确认设备型号。</p>
@@ -364,9 +364,9 @@ footer .wrap{display:flex; flex-direction:column; gap:8px}
     <h2>插件生态</h2>
     <p class="lead">Star OS 1.5 起内置插件系统：严格审核 + 逐项授权，支持云端商店与本地安装。</p>
     <div class="btns">
-      <a class="btn pri" href="https://cdn.jsdelivr.net/gh/lqbz6office/star-os-plugins@main/docs/插件开发文档.md">插件开发文档</a>
+            <a class="btn pri" href="https://staros.lqbz.dpdns.org/gh/lqbz6office/star-os-plugins/main/docs/%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3.md">插件开发文档</a>
       <a class="btn ghost" href="https://github.com/lqbz6office/star-os-plugins/issues/new?template=plugin-submit.yml">投稿插件</a>
-      <a class="btn ghost" href="https://cdn.jsdelivr.net/gh/lqbz6office/star-os-plugins@main/index.json">插件目录</a>
+            <a class="btn ghost" href="https://staros.lqbz.dpdns.org/plugins">插件目录</a>
     </div>
   </div>
 </section>
@@ -400,15 +400,15 @@ footer .wrap{display:flex; flex-direction:column; gap:8px}
 </footer>
 
 <script>
-// 视频双源:默认 gh-proxy 加速(国内可达),一键切回 GitHub 直链
+// 视频双源:默认走自建边缘网关(Cloudflare),一键切回 GitHub 直链
 var REL = "https://github.com/lqbz6office/star-os-assets/releases/download/media/";
-var PROXY = "https://gh-proxy.com/";
+var EDGE = "https://staros.lqbz.dpdns.org/rel/lqbz6office/star-os-assets/media/";
 function fillVideos(useProxy){
   document.querySelectorAll(".video-card").forEach(function(card){
     var name = card.getAttribute("data-vsrc") + ".mp4";
     var v = card.querySelector("video");
     if (!v) return;
-    v.src = (useProxy ? PROXY : "") + REL + name;
+    v.src = (useProxy ? EDGE : REL) + name;
   });
 }
 fillVideos(true);
