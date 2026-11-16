@@ -166,6 +166,28 @@ h2{font-size:clamp(27px,4.6vw,38px); font-weight:800; margin-bottom:14px}
 
 footer{border-top:1px solid var(--line); padding:36px 0 44px; color:#5d6b85; font-size:13px; text-align:center}
 footer .wrap{display:flex; flex-direction:column; gap:8px}
+
+/* 开发者激励 */
+.bonus-banner{
+  position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;
+  gap:30px; background:linear-gradient(135deg,#0f1d36,#0b1424);
+  border:1px solid #27436e; border-radius:18px; padding:30px 26px; margin-bottom:20px;
+}
+.bonus-banner::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  background:radial-gradient(420px 200px at 12% 0%, #2a5ea855, transparent 70%),
+             radial-gradient(380px 200px at 88% 100%, #5b48b055, transparent 70%);
+}
+.bn{position:relative; z-index:1; text-align:center; flex:1; min-width:0}
+.bn .num{
+  font-size:clamp(36px,7vw,56px); font-weight:900; line-height:1;
+  background:linear-gradient(180deg,#fff 30%,#9cc4ff);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.bn .lb{color:var(--dim); font-size:13.5px; margin-top:9px; letter-spacing:.5px}
+.bn-arrow{position:relative; z-index:1; color:var(--acc); font-size:25px; font-weight:700; opacity:.85}
+@media(max-width:560px){ .bonus-banner{gap:12px; padding:24px 14px} .bn-arrow{font-size:19px} }
+.bonus-more{margin-top:18px; text-align:center}
 </style>
 </head>
 <body>
@@ -178,6 +200,7 @@ footer .wrap{display:flex; flex-direction:column; gap:8px}
     <a class="nl" href="#videos">视频</a>
     <a class="nl" href="#install">刷入教程</a>
     <a class="nl" href="#plugins">插件</a>
+    <a class="nl" href="#devplan">激励</a>
     <a class="nl" href="activate.html">激活</a>
     <a class="cta" href="#download">下载</a>
   </div>
@@ -368,6 +391,77 @@ footer .wrap{display:flex; flex-direction:column; gap:8px}
       <a class="btn ghost" href="https://github.com/lqbz6office/star-os-plugins/issues/new?template=plugin-submit.yml">投稿插件</a>
             <a class="btn ghost" href="https://staros.lqbz.dpdns.org/plugins">插件目录</a>
     </div>
+  </div>
+</section>
+
+<!-- ======================= 开发者激励 ======================= -->
+<section id="devplan" style="border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="kicker">DEVELOPER PROGRAM</div>
+    <h2>开发者激励计划</h2>
+    <p class="lead">为鼓励更多开发者参与生态建设，Star OS 推出长期激励：每月在插件商店新上架达标，即可领取 Pro+ 会员。奖励直接续期到你正在使用的授权码，不需要任何兑换码。</p>
+
+    <div class="bonus-banner">
+      <div class="bn">
+        <div class="num">10</div>
+        <div class="lb">个新插件 / 月</div>
+      </div>
+      <div class="bn-arrow">→</div>
+      <div class="bn">
+        <div class="num">1</div>
+        <div class="lb">个月 Pro+ 会员</div>
+      </div>
+    </div>
+
+    <div class="changes">
+      <div class="ch">
+        <div class="n">1</div>
+        <div><b>只算新插件</b><p>同一个插件更新版本不计入。把 1 个插件改 10 次版本，不算达标。</p></div>
+      </div>
+      <div class="ch">
+        <div class="n">2</div>
+        <div><b>按设备归属</b><p>以上传时「开发者通行证」绑定的设备码为唯一依据，修改昵称不影响统计。</p></div>
+      </div>
+      <div class="ch">
+        <div class="n">3</div>
+        <div><b>每月一次</b><p>每个自然月最多领取一次，当月未领取不结转到下个月。</p></div>
+      </div>
+      <div class="ch">
+        <div class="n">4</div>
+        <div><b>自 2026 年 11 月起算</b><p>计划上线前已上架的插件缺少归属记录，不计入当月进度，从本月起的上架开始统计。</p></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b style="color:#fff">统计范围</b>：目前只有开发者平台「直接发布到商店」这条通道会记录归属，经审核收录提交的插件暂不计入，该通道后续开放。
+    </div>
+
+    <div class="kicker" style="margin-top:34px">HOW TO CLAIM</div>
+    <h2 style="font-size:26px">怎么领</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <p>打开开发者平台 <b>1.2.0</b> 及以上版本，左侧进入 <b>「激励计划」</b>页，即可看到本月进度（已上架 N / 10）。</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <p>达标后 <b>「领取奖励」</b>按钮变为可点，点一下即到账：无需激活码，系统直接把当前授权码升为 <b>Pro+</b> 并续期 30 天。</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <p>手表端 <b>重开一次插件中心</b>即可看到新等级（公开授权索引约 1 分钟内完成同步）。</p>
+      </div>
+      <div class="step">
+        <div class="n">4</div>
+        <p>若原有 Pro+ 到期更晚，<b>从原到期日往后加 30 天</b>，不会覆盖你剩余的使用时长。</p>
+      </div>
+    </div>
+
+    <div class="btns" style="justify-content:flex-start; margin-top:26px">
+      <a class="btn pri" href="https://staros.lqbz.dpdns.org/gh/lqbz6office/star-os-plugins/main/docs/%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E6%96%87%E6%A1%A3.md">插件开发文档</a>
+      <a class="btn ghost" href="https://staros.lqbz.dpdns.org/plugins">插件商店</a>
+    </div>
+    <p style="color:#5d6b85; font-size:13px; margin-top:14px">开发者平台向活跃开发者开放：已在使用的开发者升级到 1.2.0 后即可看到新页面，新开发者可在交流群内获取。</p>
   </div>
 </section>
 
